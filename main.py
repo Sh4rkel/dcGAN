@@ -55,7 +55,6 @@ def load_pixel_art_images(directories, image_size=(32, 32)):
             images.append(img)
     return np.array(images)
 
-
 directories = [
     'data/Cars Dataset/train/Audi',
     'data/Cars Dataset/train/Hyundai Creta',
@@ -84,7 +83,6 @@ def verify_dataset(directories, image_size=(32, 32)):
             print(f"Successfully read and resized image from {folder}")
         except Exception as e:
             print(f"Error reading image from {folder}: {e}")
-
 
 verify_dataset(directories)
 
@@ -126,6 +124,8 @@ def train_step(images):
     generator_optimizer.apply_gradients(zip(gradients_of_generator, generator.trainable_variables))
     discriminator_optimizer.apply_gradients(zip(gradients_of_discriminator, discriminator.trainable_variables))
 
+    return gen_loss, disc_loss
+
 def generator_loss(fake_output):
     return cross_entropy(tf.ones_like(fake_output), fake_output)
 
@@ -137,7 +137,8 @@ def discriminator_loss(real_output, fake_output):
 def train(dataset, epochs):
     for epoch in range(epochs):
         for image_batch in dataset:
-            train_step(image_batch)
+            gen_loss, disc_loss = train_step(image_batch)
+            print(f"Epoch {epoch+1}, Gen Loss: {gen_loss.numpy()}, Disc Loss: {disc_loss.numpy()}")
 
 st.title("Cars photos Generator")
 
@@ -169,7 +170,7 @@ if st.button('Generate Cars photos'):
 
     for i in range(generated_images.shape[0]):
         plt.subplot(4, 4, i + 1)
-        plt.imshow((generated_images[i] + 1) / 2)
+        plt.imshow((generated_images[i] * 127.5 + 127.5).numpy().astype(np.uint8))
         plt.axis('off')
     plt.show()
 
