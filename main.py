@@ -136,3 +136,4 @@ if st.button('Generate Pixel Art'):
 
     print(f"Generated images shape: {generated_images.shape}")
     print(f"Generated images range: {generated_images.numpy().min()} to {generated_images.numpy().max()}")
+    print(f"Generated images (raw) range: {generated_images.min()} to {generated_images.max()}")
