@@ -139,11 +139,11 @@ def train(dataset, epochs):
         for image_batch in dataset:
             train_step(image_batch)
 
-st.title("Pixel Art Generator")
+st.title("Cars photos Generator")
 
 seed = tf.random.normal([16, 100])
 
-if st.button('Generate Pixel Art'):
+if st.button('Generate Cars photos'):
     generated_images = generator(seed, training=False)
     save_dir = 'save'
     os.makedirs(save_dir, exist_ok=True)
