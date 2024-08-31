@@ -119,12 +119,20 @@ seed = tf.random.normal([16, 100])
 
 if st.button('Generate Pixel Art'):
     generated_images = generator(seed, training=False)
+    save_dir = 'save'
+    os.makedirs(save_dir, exist_ok=True)
 
     fig = plt.figure(figsize=(4, 4))
     for i in range(generated_images.shape[0]):
         img_array = (generated_images[i] * 127.5 + 127.5).numpy().astype(np.uint8)
+        img = Image.fromarray(img_array, 'RGB')
+        img.save(os.path.join(save_dir, f'generated_image_{i}.png'))
+
         plt.subplot(4, 4, i + 1)
         plt.imshow(img_array)
         plt.axis('off')
 
     st.pyplot(fig)
+
+    print(f"Generated images shape: {generated_images.shape}")
+    print(f"Generated images range: {generated_images.numpy().min()} to {generated_images.numpy().max()}")
