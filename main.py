@@ -55,13 +55,39 @@ def load_pixel_art_images(directories, image_size=(32, 32)):
             images.append(img)
     return np.array(images)
 
-directories = ['data/Cars Dataset/train/Audi',
-               'data/Cars Dataset/train/Hyundai Creta',
-               'data/Cars Dataset/train/Mahindra Scorpio',
-               'data/Cars Dataset/train/Rolls Royce',
-               'data/Cars Dataset/train/Swift',
-               'data/Cars Dataset/train/Tata Safari',
-               'data/Cars Dataset/train/Toyota Innova',]
+
+directories = [
+    'data/Cars Dataset/train/Audi',
+    'data/Cars Dataset/train/Hyundai Creta',
+    'data/Cars Dataset/train/Mahindra Scorpio',
+    'data/Cars Dataset/train/Rolls Royce',
+    'data/Cars Dataset/train/Swift',
+    'data/Cars Dataset/train/Tata Safari',
+    'data/Cars Dataset/train/Toyota Innova',
+]
+
+def verify_dataset(directories, image_size=(32, 32)):
+    for folder in directories:
+        if not os.path.exists(folder):
+            print(f"Directory {folder} does not exist.")
+            continue
+
+        files = os.listdir(folder)
+        if not files:
+            print(f"Directory {folder} is empty.")
+            continue
+
+        sample_file = files[0]
+        try:
+            img = Image.open(os.path.join(folder, sample_file)).convert('RGB')
+            img = img.resize(image_size, Image.Resampling.LANCZOS)
+            print(f"Successfully read and resized image from {folder}")
+        except Exception as e:
+            print(f"Error reading image from {folder}: {e}")
+
+
+verify_dataset(directories)
+
 pixel_art_images = load_pixel_art_images(directories)
 
 buffer_size = len(pixel_art_images)
@@ -146,6 +172,8 @@ if st.button('Generate Pixel Art'):
         plt.imshow((generated_images[i] + 1) / 2)
         plt.axis('off')
     plt.show()
+
+    _ = generator(seed)
 
     intermediate_layer_model = tf.keras.Model(inputs=generator.input, outputs=generator.layers[-2].output)
     intermediate_output = intermediate_layer_model(seed)
