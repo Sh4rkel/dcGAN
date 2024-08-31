@@ -136,7 +136,7 @@ if st.button('Generate Pixel Art'):
 
     print(f"Generated images shape: {generated_images.shape}")
     print(f"Generated images range: {generated_images.numpy().min()} to {generated_images.numpy().max()}")
-    print(f"Generated images (raw) range: {generated_images.min()} to {generated_images.max()}")
+    print(f"Generated images (raw) range: {tf.reduce_min(generated_images).numpy()} to {tf.reduce_max(generated_images).numpy()}")
 
     if np.any(np.isnan(generated_images.numpy())) or np.any(np.isinf(generated_images.numpy())):
         print("Warning: NaN or Inf values found in generated images")
@@ -150,4 +150,4 @@ if st.button('Generate Pixel Art'):
     intermediate_layer_model = tf.keras.Model(inputs=generator.input, outputs=generator.layers[-2].output)
     intermediate_output = intermediate_layer_model(seed)
     print(f"Intermediate output shape: {intermediate_output.shape}")
-    print(f"Intermediate output range: {intermediate_output.numpy().min()} to {intermediate_output.numpy().max()}")
+    print(f"Intermediate output range: {tf.reduce_min(intermediate_output).numpy()} to {tf.reduce_max(intermediate_output).numpy()}")
